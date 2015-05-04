@@ -62,7 +62,7 @@ class simmons::exercise ($studio) {
   file { 'content-file':
     path    => "${studio}/content-file",
     ensure  => present,
-    content => "Static content defined in manifest",
+    content => "Static content defined in manifest\n",
   }
 
   file { 'source-file':
