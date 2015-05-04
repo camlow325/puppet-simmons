@@ -31,6 +31,22 @@ management, etc.) this is the time to mention it.
 
 ## Setup
 
+### File Server
+
+Enable custom mount point in `fileserver.conf`:
+```
+[simmons_custom_mount_point]
+path /path/to/modules/simmons/mount-point-files
+allow *
+```
+
+### Structured Facts
+
+Enable structured facts in the agent's `puppet.conf`:
+```
+stringify_facts=false
+```
+
 ### What simmons affects
 
 * A list of files, packages, services, or operations that the module will alter,
