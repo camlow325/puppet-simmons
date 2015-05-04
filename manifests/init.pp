@@ -101,13 +101,13 @@ class simmons::exercise ($studio) {
   file { 'custom-fact-output':
     path    => "${studio}/custom-fact-output",
     ensure  => present,
-    content => $custom_fact_pwd,
+    content => $custom_fact_hostname,
   }
 
   file { 'external-fact-output':
     path    => "${studio}/external-fact-output",
     ensure  => present,
-    content => $external_fact_date,
+    content => $external_fact_hostname,
   }
 }
 
