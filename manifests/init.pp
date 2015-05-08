@@ -20,20 +20,28 @@ class simmons::warmup ($studio) {
     command => "rm -rf ${studio}/recursive-directory",
   }
 
-  exec { 'change-binary-file':
-    command => "cp -f /usr/bin/who ${studio}/binary-file",
-  }
-
-  exec { 'change-source-file':
-    command => "bash -c 'dd if=/dev/urandom bs=512 count=1 > ${studio}/source-file'",
-  }
-
   exec { 'remove-custom-fact-output':
     command => "rm -f ${studio}/custom-fact-output",
   }
 
   exec { 'remove-external-fact-output':
     command => "rm -f ${studio}/external-fact-output",
+  }
+
+  exec { 'change-binary-file':
+    # Change the contents of the file so it will be backed up to the server.
+    command => "cp -f /usr/bin/who ${studio}/binary-file",
+  }
+
+  exec { 'change-source-file':
+    # Change the contents of source-file to something random so it will
+    # (hopefully) always be different than a previous version of this file,
+    # which will cause it to always be backed up to the server.
+    # I think $RANDOM may not always be defined, so a timestamp is also
+    # thrown in there so we don't end up with an empty file.
+    # NOTE: previous implementations of this used `dd` but it sometimes
+    # produced a file that causes an agent error during backup. See PUP-3377.
+    command => "bash -c 'echo \${RANDOM} \$(date)> ${studio}/source-file'",
   }
 }
 
@@ -44,36 +52,27 @@ class simmons::exercise ($studio) {
     path => false,
   }
 
-  # TEST files are backed up on master
-  File {
+  file { 'source-file':
+    path   => "${studio}/source-file",
+    ensure => present,
+    source => 'puppet:///modules/simmons/source-file',
     backup => backups,
   }
 
-  # TEST contents = "Static content defined in manifest"
+  file { 'binary-file':
+    path   => "${studio}/binary-file",
+    ensure => present,
+    mode   => "0755",
+    source => 'puppet:///modules/simmons/binary-file',
+    backup => backups,
+  }
+
   file { 'content-file':
     path    => "${studio}/content-file",
     ensure  => present,
     content => "Static content defined in manifest\n",
   }
 
-  # TEST contents = "Static source file contents"
-  file { 'source-file':
-    path   => "${studio}/source-file",
-    ensure => present,
-    source => 'puppet:///modules/simmons/source-file',
-  }
-
-  # TODO how do we test this?
-  file { 'binary-file':
-    path   => "${studio}/binary-file",
-    ensure => present,
-    mode   => "0755",
-    source => 'puppet:///modules/simmons/binary-file',
-  }
-
-  # TEST directory exists
-  # TEST subdirectory exists
-  # TEST subdirectory/subfile contents = "Recursive subfile contents"
   file { 'recursive-directory':
     path    => "${studio}/recursive-directory",
     source  => 'puppet:///modules/simmons/source-recursive-directory',
@@ -81,14 +80,12 @@ class simmons::exercise ($studio) {
     recurse => true,
   }
 
-  # TEST contents = "File served from custom mount point"
   file { 'mount-point-source-file':
     path   => "${studio}/mount-point-source-file",
     ensure => present,
     source => 'puppet:///simmons_custom_mount_point/mount-point-source-file',
   }
 
-  # TODO how do we test this?
   file { 'mount-point-binary-file':
     path   => "${studio}/mount-point-binary-file",
     ensure => present,
@@ -96,14 +93,12 @@ class simmons::exercise ($studio) {
     source => 'puppet:///simmons_custom_mount_point/mount-point-binary-file',
   }
 
-  # TEST contents = <hostname>
   file { 'custom-fact-output':
     path    => "${studio}/custom-fact-output",
     ensure  => present,
     content => $custom_fact_hostname,
   }
 
-  # TEST contents = <hostname>
   file { 'external-fact-output':
     path    => "${studio}/external-fact-output",
     ensure  => present,
