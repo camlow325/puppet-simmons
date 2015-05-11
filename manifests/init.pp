@@ -30,7 +30,9 @@ class simmons::warmup ($studio) {
 
   exec { 'change-binary-file':
     # Change the contents of the file so it will be backed up to the server.
-    command => "cp -f /usr/bin/who ${studio}/binary-file",
+    command => "cp -f /usr/bin/who ${studio}/binary-file &&
+                cp -f ${studio}/binary-file ${studio}/binary-file-old &&
+                openssl dgst -md5 -out ${studio}/binary-file-old-md5 ${studio}/binary-file",
   }
 
   exec { 'change-source-file':
@@ -41,7 +43,9 @@ class simmons::warmup ($studio) {
     # thrown in there so we don't end up with an empty file.
     # NOTE: previous implementations of this used `dd` but it sometimes
     # produced a file that causes an agent error during backup. See PUP-3377.
-    command => "bash -c 'echo \${RANDOM} \$(date)> ${studio}/source-file'",
+    command => "bash -c 'echo \${RANDOM} \$(date)> ${studio}/source-file' &&
+                cp -f ${studio}/source-file ${studio}/source-file-old &&
+                openssl dgst -md5 -out ${studio}/source-file-old-md5 ${studio}/source-file",
   }
 }
 
