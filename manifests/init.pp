@@ -58,7 +58,7 @@ class simmons::exercise ($studio) {
     path   => "${studio}/source-file",
     ensure => present,
     source => 'puppet:///modules/simmons/source-file',
-    # backup => backups,
+    backup => backups,
   }
 
   file { 'binary-file':
