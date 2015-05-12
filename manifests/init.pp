@@ -33,7 +33,7 @@ class simmons::warmup ($studio) {
     # Keep a copy of the old (previous) version of the file around so we can
     # use it to verify filebucket backups are working as expected during
     # acceptance testing.
-    command => "cp -f /usr/bin/who ${studio}/binary-file &&
+    command => "cp -f /bin/ls ${studio}/binary-file &&
                 cp -f ${studio}/binary-file ${studio}/binary-file-old",
   }
 
