@@ -30,6 +30,9 @@ class simmons::warmup ($studio) {
 
   exec { 'change-binary-file':
     # Change the contents of the file so it will be backed up to the server.
+    # Keep a copy of the old (previous) version of the file around so we can
+    # use it to verify filebucket backups are working as expected during
+    # acceptance testing.
     command => "cp -f /usr/bin/who ${studio}/binary-file &&
                 cp -f ${studio}/binary-file ${studio}/binary-file-old",
   }
@@ -42,6 +45,9 @@ class simmons::warmup ($studio) {
     # thrown in there so we don't end up with an empty file.
     # NOTE: previous implementations of this used `dd` but it sometimes
     # produced a file that causes an agent error during backup. See PUP-3377.
+    # Keep a copy of the old (previous) version of the file around so we can
+    # use it to verify filebucket backups are working as expected during
+    # acceptance testing.
     command => "bash -c 'echo \${RANDOM} \$(date) > ${studio}/source-file' &&
                 cp -f ${studio}/source-file ${studio}/source-file-old",
   }
@@ -109,7 +115,8 @@ class simmons::exercise ($studio) {
 }
 
 class simmons ($studio = undef) {
-  $error = "\$studio directory string parameter required, got: $studio"
+  # Try to ensure parameter is a probably a path (e.g. one or more non-digits)
+  $error = "\$studio directory string parameter required, got: ${studio}"
   validate_re($studio, '\D+', $error)
 
   file { 'studio-directory':
