@@ -1,6 +1,6 @@
 {
   "name": "nwolfe-simmons",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Nate Wolfe",
   "summary": "Exercise the Master HTTP API indirectly via Puppet resources",
   "license": "Apache-2.0",
