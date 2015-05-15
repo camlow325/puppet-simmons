@@ -1,4 +1,7 @@
 # simmons
+<img src="http://worth1000.s3.amazonaws.com/submissions/20025500/20025890_1d13_625x1000.jpg" />
+
+A twisted module to exercise the Puppet Master HTTP API.
 
 #### Table of Contents
 
@@ -7,31 +10,37 @@
 3. [Setup - The basics of getting started with simmons](#setup)
     * [What simmons affects](#what-simmons-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with simmons](#beginning-with-simmons)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+The simmons module contains very particular Puppet manifests and resources that
+will result in specific parts of the Puppet master's HTTP API being exercised
+during agent runs.
+
+It is not meant to do anything useful on the agents themselves, but is instead
+useful for Puppet developers (mostly server, but also client-side) to
+effectively test the HTTP API.
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
+Simmons is designed in a somewhat odd fashion in order for it to essentially
+undo itself during the agent run. This is necessary in order to be able to do
+successive agent runs that each hit the entire HTTP API (that is being exercised).
+Without this, only the first agent run would hit the HTTP API and subsequent
+runs would find all the resources already on the agent.
 
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+To this end, classes typically contain a proper Puppet resource (usually `file`)
+and a corresponding "poor mans Puppet" `exec` resource that negates it.
 
 ## Setup
 
 ### File Server
+
+In order to exercise the custom mount points supported by the master fileserver,
+you will need to configure the fileserver to look for files contained within
+the module under the `mount-point-files` directory.
 
 Enable custom mount point in `fileserver.conf`:
 ```
@@ -49,47 +58,38 @@ stringify_facts=false
 
 ### What simmons affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-### Beginning with simmons
-
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+Simmons operates entirely within the `studio` directory parameter that is
+supplied to the main `simmons` class.
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+The entry class is `simmons`, which takes a required directory parameter and
+optional list of simmons class names for the exercises to run.
+
+####`studio`
+
+Absolute path to a sandbox directory where simmons can operate in.
+If the directory doesn't exist it will be created.
+
+####`exercises`
+
+Array of class names corresponding to the exercises to perform during the agent
+run.
+
+For example, to test custom facts and binary files the value for this parameter
+would be `['simmons::custom_fact_output', 'simmons::binary_file']`.
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Classes
 
-## Limitations
-
-This is where you list OS compatibility, version compatibility, etc.
-
-## Development
-
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+* `simmons::binary_file`: exercise file endpoints with binary files
+* `simmons::content_file`: exercise file endpoints with content-attribute files
+* `simmons::source_file`: exercise file endpoints with source-attribute files
+* `simmons::recursive_directory`: exercise file endpoints with recursive directories
+* `simmons::custom_fact_output`: exercise pluginsync endpoints with custom facts
+* `simmons::external_fact_output`: exercise pluginsync endpoints with external facts
+* `simmons::mount_point_source_file`: exercise file server endpoints using custom
+mount points and source-attribute files
+* `simmons::mount_point_binary_file`: exercise file server endpoints using custom
+mount points and binary files
