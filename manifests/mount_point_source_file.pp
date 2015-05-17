@@ -1,6 +1,6 @@
 class simmons::mount_point_source_file ($studio) {
   exec { 'remove-mount-point-source-file':
-    command => "/bin/rm -f ${studio}/mount-point-source-file",
+    command => "rm -f ${studio}/mount-point-source-file",
   }
   ->
   file { 'mount-point-source-file':

@@ -1,6 +1,6 @@
 class simmons::custom_fact_output ($studio) {
   exec { 'remove-custom-fact-output':
-    command => "/bin/rm -f ${studio}/custom-fact-output",
+    command => "rm -f ${studio}/custom-fact-output",
   }
   ->
   file { 'custom-fact-output':

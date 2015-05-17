@@ -1,6 +1,6 @@
 class simmons::recursive_directory ($studio) {
   exec { 'remove-recursive-directory':
-    command => "/bin/rm -rf ${studio}/recursive-directory",
+    command => "rm -rf ${studio}/recursive-directory",
   }
   ->
   file { 'recursive-directory':

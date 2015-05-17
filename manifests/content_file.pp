@@ -1,6 +1,6 @@
 class simmons::content_file ($studio) {
   exec { 'remove-content-file':
-    command => "/bin/rm -f ${studio}/content-file",
+    command => "rm -f ${studio}/content-file",
   }
   ->
   file { 'content-file':
