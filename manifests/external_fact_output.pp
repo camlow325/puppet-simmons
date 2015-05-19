@@ -4,8 +4,8 @@ class simmons::external_fact_output ($studio) {
   }
   ->
   file { 'external-fact-output':
-    path    => "${studio}/external-fact-output",
     ensure  => present,
-    content => $external_fact_hostname,
+    path    => "${studio}/external-fact-output",
+    content => $::external_fact_hostname,
   }
 }

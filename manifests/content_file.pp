@@ -4,8 +4,8 @@ class simmons::content_file ($studio) {
   }
   ->
   file { 'content-file':
-    path    => "${studio}/content-file",
     ensure  => present,
+    path    => "${studio}/content-file",
     content => "Static content defined in manifest\n",
   }
 }

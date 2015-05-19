@@ -1,7 +1,7 @@
 class simmons::source_file ($studio) {
   file { 'source-file-old':
-    path    => "${studio}/source-file-old",
     ensure  => present,
+    path    => "${studio}/source-file-old",
     content => rand_text(),
   }
   ->
@@ -18,8 +18,8 @@ class simmons::source_file ($studio) {
   }
   ->
   file { 'source-file':
-    path   => "${studio}/source-file",
     ensure => present,
+    path   => "${studio}/source-file",
     source => 'puppet:///modules/simmons/source-file',
     backup => 'server-backups',
   }
