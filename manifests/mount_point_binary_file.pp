@@ -1,6 +1,6 @@
 class simmons::mount_point_binary_file ($studio) {
   exec { 'remove-mount-point-binary-file':
-    command => "/bin/rm -f ${studio}/mount-point-binary-file",
+    command => "rm -f ${studio}/mount-point-binary-file",
   }
   ->
   file { 'mount-point-binary-file':

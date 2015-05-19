@@ -12,6 +12,10 @@ class simmons (
   validate_absolute_path($studio)
   validate_array($exercises)
 
+  Exec {
+    path => $::path
+  }
+
   filebucket { 'server-backups':
     # use central filebucket on the server
     path => false,
