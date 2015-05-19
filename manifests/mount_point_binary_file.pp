@@ -4,9 +4,9 @@ class simmons::mount_point_binary_file ($studio) {
   }
   ->
   file { 'mount-point-binary-file':
-    path   => "${studio}/mount-point-binary-file",
     ensure => present,
-    mode   => "0755",
+    path   => "${studio}/mount-point-binary-file",
+    mode   => '0755',
     source => 'puppet:///simmons_custom_mount_point/mount-point-binary-file',
   }
 }

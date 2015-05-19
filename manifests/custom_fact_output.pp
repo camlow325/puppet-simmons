@@ -4,8 +4,8 @@ class simmons::custom_fact_output ($studio) {
   }
   ->
   file { 'custom-fact-output':
-    path    => "${studio}/custom-fact-output",
     ensure  => present,
-    content => $custom_fact_hostname,
+    path    => "${studio}/custom-fact-output",
+    content => $::custom_fact_hostname,
   }
 }

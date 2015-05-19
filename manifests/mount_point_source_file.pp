@@ -4,8 +4,8 @@ class simmons::mount_point_source_file ($studio) {
   }
   ->
   file { 'mount-point-source-file':
-    path   => "${studio}/mount-point-source-file",
     ensure => present,
+    path   => "${studio}/mount-point-source-file",
     source => 'puppet:///simmons_custom_mount_point/mount-point-source-file',
   }
 }
