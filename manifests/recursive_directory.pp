@@ -4,9 +4,9 @@ class simmons::recursive_directory ($studio) {
   }
   ->
   file { 'recursive-directory':
+    ensure  => directory,
     path    => "${studio}/recursive-directory",
     source  => 'puppet:///modules/simmons/source-recursive-directory',
-    ensure  => directory,
     recurse => true,
   }
 }

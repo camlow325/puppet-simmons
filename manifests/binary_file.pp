@@ -1,8 +1,8 @@
 class simmons::binary_file ($studio) {
   file { 'binary-file-old':
-    path   => "${studio}/binary-file-old",
     ensure => present,
-    mode   => "0644",
+    path   => "${studio}/binary-file-old",
+    mode   => '0644',
     source => 'puppet:///modules/simmons/binary-file-old',
   }
   ->
@@ -15,9 +15,9 @@ class simmons::binary_file ($studio) {
   }
   ->
   file { 'binary-file':
-    path   => "${studio}/binary-file",
     ensure => present,
-    mode   => "0755",
+    path   => "${studio}/binary-file",
+    mode   => '0755',
     source => 'puppet:///modules/simmons/binary-file',
     backup => 'server-backups',
   }
