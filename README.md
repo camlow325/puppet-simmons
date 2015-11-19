@@ -42,10 +42,10 @@ In order to exercise the custom mount points supported by the master fileserver,
 you will need to configure the fileserver to look for files contained within
 the module under the `mount-point-files` directory.
 
-Enable custom mount point in `fileserver.conf`:
+For example, in Puppet 4+ `fileserver.conf`:
 ```
 [simmons_custom_mount_point]
-path /path/to/modules/simmons/mount-point-files
+path /etc/puppetlabs/code/environments/production/modules/simmons/mount-point-files
 allow *
 ```
 
